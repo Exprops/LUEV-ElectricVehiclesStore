@@ -1,3 +1,5 @@
+
+
 const db=require("./db/query")
 require("dotenv").config();
 const express = require("express");
@@ -31,6 +33,23 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+
+// AWS Lex
+const LexRouter = require("./routes/lex");
+
+app.set('trust proxy', true);
+
+app.use(
+  cors({
+    origin: "https://luev-electricvehiclesstore.onrender.com",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type"],
+    credentials: true,
+  })
+);
+
+
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -56,6 +75,7 @@ app.use("/customizations",CustomizeRouter)
 app.use("/check-out",CheckoutRouter)
 app.use("/",AdminRouter)
 
+app.use("/api/lex", LexRouter)
 
 const PORT = process.env.PORT || 5000; // use Render’s port first, fallback to 5000
 app.listen(PORT, () => {
