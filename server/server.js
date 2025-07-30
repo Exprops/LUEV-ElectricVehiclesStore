@@ -20,7 +20,7 @@ initialize(passport);
 
 app.use(
   cors({
-    origin: "https://luev-electricvehiclesstore.onrender.com/",
+    origin: "https://luev-electricvehiclesstore.onrender.com",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type"],
     credentials: true,
