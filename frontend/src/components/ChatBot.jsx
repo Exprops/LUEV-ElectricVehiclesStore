@@ -132,60 +132,36 @@
 
 
 
-// components/ChatBot.js
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 const ChatBot = () => {
-  const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
 
   const sendMessage = async () => {
-    if (!input.trim()) return;
+    const response = await fetch("https://your-backend-url.onrender.com/api/lex", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message: input, userId: "frontend-user" })
+    });
 
-    setMessages(prev => [...prev, { sender: "user", text: input }]);
-
-    try {
-      const res = await fetch("https://luev-electricvehiclesstore-info.onrender.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input, userId: "frontend-user" }),
-      });
-
-      const data = await res.json();
-      const botReply = data?.messages?.[0]?.content || "No reply";
-      setMessages(prev => [...prev, { sender: "bot", text: botReply }]);
-    } catch (err) {
-      console.error(err);
-      setMessages(prev => [...prev, { sender: "bot", text: "Error talking to Lex." }]);
-    }
-
+    const data = await response.json();
+    setMessages([...messages, { from: "user", text: input }, { from: "bot", text: data.messages?.[0]?.content || "No response" }]);
     setInput("");
   };
 
   return (
-    <div className="p-4 border w-full max-w-md mx-auto mt-4 shadow rounded">
-      <div className="h-64 overflow-y-auto bg-gray-100 p-2 rounded mb-2">
-        {messages.map((msg, idx) => (
-          <div key={idx} className={`mb-1 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
-            <span className={`${msg.sender === "user" ? "text-blue-600" : "text-green-600"}`}>
-              {msg.sender === "user" ? "You: " : "Bot: "}
-            </span>
-            {msg.text}
-          </div>
+    <div style={{ border: "1px solid #ccc", padding: 10, maxWidth: 400 }}>
+      <h3>ChatBot</h3>
+      <div style={{ maxHeight: 200, overflowY: "scroll" }}>
+        {messages.map((msg, i) => (
+          <div key={i}><strong>{msg.from}:</strong> {msg.text}</div>
         ))}
       </div>
-      <div className="flex gap-2">
-        <input
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && sendMessage()}
-          className="border rounded w-full px-2 py-1"
-          placeholder="Ask something..."
-        />
-        <button onClick={sendMessage} className="bg-blue-500 text-white px-4 py-1 rounded">
-          Send
-        </button>
-      </div>
+      <input value={input} onChange={(e) => setInput(e.target.value)} />
+      <button onClick={sendMessage}>Send</button>
     </div>
   );
 };
