@@ -200,7 +200,6 @@ function ChatBot() {
     <div className="fixed bottom-6 right-6 z-50">
       {isOpen ? (
         <div className="w-80 h-[500px] flex flex-col bg-white rounded-full rounded-b-[2rem] shadow-2xl transition-all animate-fade-in-up">
-          {/* Mac-style close dot */}
           <div className="flex items-center px-4 py-2 bg-gray-100 rounded-t-full">
             <span
               className="w-3 h-3 bg-red-500 rounded-full cursor-pointer"
@@ -210,7 +209,6 @@ function ChatBot() {
             <h3 className="text-sm font-semibold ml-3 text-gray-700">ChatBot</h3>
           </div>
 
-          {/* Messages */}
           <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-white text-sm scroll-smooth">
             {messages.map((msg, idx) => (
               <div
@@ -240,7 +238,6 @@ function ChatBot() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input */}
           <div className="flex items-center gap-2 border-t border-gray-200 px-4 py-3 bg-white rounded-b-[2rem]">
             <input
               type="text"
